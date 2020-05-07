@@ -82,5 +82,41 @@ if(isset($_POST["deck_upd"]))
 
 }
 
+//Copy for admin to server
+if(isset($_POST["reserveCopy"])){
+	
+	$clans = json_decode(file_get_contents('http://bv.mrdbx.ru/services/api_proxy.php?content=clans&callback.json'),true);
+	require("DBconn.php");
+	$myfile = fopen("copy.txt", "w") or die("Unable to open file!");
+	foreach ($clans as $clan) {
+		$id = $clan['id'];
+		$urlList = 'https://berserktcg.ru/api/export/clan/';
+		$urlList = $urlList.$id.'.json';		   
+		$players = json_decode(file_get_contents($urlList),true);
+		$clanin = $clan['title']."-------------------------------\n";
+		fwrite($myfile, $clanin);
+			foreach ($players['players'] as $player) {
+				$nick=$player['nick'];
+				//echo player['nick'];
+				$playid = $player['id'];
+				$sql="SELECT * FROM decks WHERE player_id=$playid;";
+				$results = $myconn->query($sql);
+				$current ="Nick: ".$nick."; ID: ".$player['id']."; Decks: ";
+				while ($row = $results->fetch_assoc()) {
+					$current .="Updated at: ".$row['updated_at'].", Cards: ".$row['decks_cards'].", Replay: ". $row['replay'] .", Frequency".$row['frequency']."; ";
+				}
+				$current.="\n";
+				fwrite($myfile, $current);
+			}
+		$clanin = "--------------------------------------------\n";
+		fwrite($myfile, $clanin);
+		
+	}
+	
+	$myconn -> close();
+	fclose($myfile);
+	echo "Copy made";
+	require("admin_index.php");
+}
 	
 ?>
