@@ -33,6 +33,11 @@
                         }                        
                         ?>
                     </table>
+		<form action="admin_action.php" method="post"> 
+		<input type="submit" name="reserveCopy" value="Make a reserve copy in server" />
+		</form>
+		<a href="copy.txt" download>Download File</a>
+		
 		
     </body>
 </html>
