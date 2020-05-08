@@ -22,7 +22,7 @@ if(isset($_POST["playerID"]))
 	require("DBconn.php");
 
 
-	$sql="SELECT * FROM decks WHERE player_id=$playid;";
+	$sql="SELECT * FROM decks WHERE player_id=$playid ORDER BY updated_at desc;";
 	$results = $myconn->query($sql);
 	$myconn -> close();
 	require("admin_decks.php");
@@ -38,7 +38,7 @@ if(isset($_POST["deleteRecord"]))
 	$sql = "DELETE FROM decks WHERE id=$recordid;";
 	$myconn->query($sql);
 	
-	$sql="SELECT * FROM decks WHERE player_id=$playid;";
+	$sql="SELECT * FROM decks WHERE player_id=$playid ORDER BY updated_at desc;";
 	$results = $myconn->query($sql);
 	$myconn -> close();
 	echo "Record deleted";
@@ -72,7 +72,7 @@ if(isset($_POST["deck_upd"]))
 	$sql = "UPDATE decks SET decks_cards='$deck_card', replay = '$replay' WHERE id=$recordid;";
 	$myconn->query($sql);
 	
-	$sql="SELECT * FROM decks WHERE player_id=$playid;";
+	$sql="SELECT * FROM decks WHERE player_id=$playid ORDER BY updated_at desc;";
 	$results = $myconn->query($sql);
 	
 	$myconn -> close();
@@ -99,11 +99,11 @@ if(isset($_POST["reserveCopy"])){
 				$nick=$player['nick'];
 				//echo player['nick'];
 				$playid = $player['id'];
-				$sql="SELECT * FROM decks WHERE player_id=$playid;";
+				$sql="SELECT * FROM decks WHERE player_id=$playid ORDER BY updated_at desc;";
 				$results = $myconn->query($sql);
 				$current ="Nick: ".$nick."; ID: ".$player['id']."; Decks: ";
 				while ($row = $results->fetch_assoc()) {
-					$current .="Updated at: ".$row['updated_at'].", Cards: ".$row['decks_cards'].", Replay: ". $row['replay'] .", Frequency".$row['frequency']."; ";
+					$current .="Updated at: ".$row['updated_at'].", Cards: ".$row['decks_cards'].", Replay: ". $row['replay'] .", Frequency: ".$row['frequency']."; ";
 				}
 				$current.="\n";
 				fwrite($myfile, $current);
