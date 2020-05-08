@@ -22,7 +22,7 @@ if(isset($_POST["playerID"]))
 	require("DBconn.php");
 
 
-	$sql="SELECT * FROM decks WHERE player_id=$playid;";
+	$sql="SELECT * FROM decks WHERE player_id=$playid ORDER BY updated_at desc;";
 	$results = $myconn->query($sql);
 	$myconn -> close();
 	require("decks.php");
@@ -36,7 +36,7 @@ if(isset($_POST["inc_1"]))
 	require("DBconn.php");
 	$sql = "UPDATE decks SET frequency=frequency+1, updated_at = now() WHERE id=$increment;";
 	$myconn->query($sql);
-	$sql="SELECT * FROM decks WHERE player_id=$playid;";
+	$sql="SELECT * FROM decks WHERE player_id=$playid ORDER BY updated_at desc;";
 	$results = $myconn->query($sql);
 	//echo "Record updated, thanks";
 	$myconn -> close();
@@ -54,7 +54,7 @@ if(isset($_POST["deck"]))
 	$sql = "INSERT INTO decks (player_id,decks_cards,replay,frequency, created_at, updated_at) VALUES ($player,'$deck_card','$replay', 1, now(), now());";
 	$myconn->query($sql);
 	
-	$sql="SELECT * FROM decks WHERE player_id=$player;";
+	$sql="SELECT * FROM decks WHERE player_id=$player ORDER BY updated_at desc;";
 	$results = $myconn->query($sql);
 	$myconn -> close();
 	echo "You've entered deck ".$deck_card." with replay ".$replay." for player with ID ".$player." Thank you!";
